@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>بریم بوستان علوی؟</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap">
+<style>
+:root{
+  --bg1:#ffe3ec; --bg2:#ffc2d6; --card:#ffffffcc; --text:#4a1530; --muted:#9a4b6b;
+  --yes:#e63b7a; --yes-text:#fff; --no:#fff; --no-text:#7a2a4c; --no-border:#f0b3c8; --err:#d92d3a;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg1:#2a0f1c; --bg2:#4a1530; --card:#3a1a2acc; --text:#ffe3ec; --muted:#e7a3bd;
+    --yes:#ff5c93; --yes-text:#2a0f1c; --no:#3a1a2a; --no-text:#ffd0e0; --no-border:#7a3a55; --err:#ff6b75;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg1:#2a0f1c; --bg2:#4a1530; --card:#3a1a2acc; --text:#ffe3ec; --muted:#e7a3bd;
+  --yes:#ff5c93; --yes-text:#2a0f1c; --no:#3a1a2a; --no-text:#ffd0e0; --no-border:#7a3a55; --err:#ff6b75;
+  color-scheme: dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;height:100%;display:flex;align-items:center;justify-content:center;
+  font-family:"Vazirmatn",Tahoma,"Segoe UI",sans-serif;color:var(--text);
+  background:linear-gradient(160deg,var(--bg1),var(--bg2));overflow:hidden;
+}
+.card{
+  width:min(92vw,420px);background:var(--card);backdrop-filter:blur(8px);
+  border-radius:28px;padding:36px 24px 32px;text-align:center;
+  box-shadow:0 20px 60px #e63b7a33;
+}
+.emoji{font-size:64px;line-height:1;animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-8px)}}
+h1{font-size:28px;font-weight:900;margin:16px 0 6px}
+p.sub{margin:0 0 26px;color:var(--muted);font-size:15px}
+.btns{display:flex;gap:14px;justify-content:center;align-items:center;min-height:64px}
+button{
+  font-family:inherit;font-weight:700;font-size:20px;border:0;cursor:pointer;
+  border-radius:999px;padding:14px 38px;transition:transform .25s ease, opacity .25s ease;
+}
+#yes{background:var(--yes);color:var(--yes-text);box-shadow:0 8px 22px #e63b7a55}
+#yes:active{transform:scale(.96)}
+#no{background:var(--no);color:var(--no-text);border:2px solid var(--no-border)}
+#no.shrunk{transform:scale(.55);color:var(--err);border-color:var(--err)}
+#no.gone{opacity:0;transform:scale(0);pointer-events:none;position:absolute;visibility:hidden}
+#err{
+  min-height:28px;margin-top:18px;color:var(--err);font-weight:700;font-size:18px;
+  opacity:0;transition:opacity .2s;
+}
+#err.show{opacity:1}
+.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+#done{display:none}
+#done h1{font-size:30px}
+.heart{position:fixed;bottom:-40px;font-size:26px;animation:rise 3.5s linear forwards;pointer-events:none}
+@keyframes rise{to{transform:translateY(-110vh) rotate(20deg);opacity:0}}
+</style>
+</head>
+<body>
+<main class="card">
+  <section id="ask">
+    <div class="emoji">🌳</div>
+    <h1>میای بریم بوستان علوی؟</h1>
+    <p class="sub">یه قدم زدن و یه عالمه خوشی ✨</p>
+    <div class="btns">
+      <button id="yes">آره</button>
+      <button id="no">نه</button>
+    </div>
+    <div id="err" aria-live="polite">خطا</div>
+  </section>
+  <section id="done">
+    <div class="emoji">💖</div>
+    <h1>ممنون که نگفتی نه!</h1>
+    <p class="sub" style="font-size:22px;color:var(--text);font-weight:700">پس بریم 🌸</p>
+  </section>
+</main>
+<script>
+(function(){
+  var no=document.getElementById('no'), yes=document.getElementById('yes'),
+      err=document.getElementById('err'), ask=document.getElementById('ask'),
+      done=document.getElementById('done'), count=0;
+
+  no.addEventListener('click',function(){
+    count++;
+    if(count===1){
+      no.classList.add('shrunk');
+      err.classList.add('show');
+      err.classList.remove('shake'); void err.offsetWidth; err.classList.add('shake');
+    }else{
+      no.classList.add('gone');
+      err.classList.add('show');
+      err.classList.remove('shake'); void err.offsetWidth; err.classList.add('shake');
+    }
+  });
+
+  yes.addEventListener('click',function(){
+    ask.style.display='none';
+    done.style.display='block';
+    for(var i=0;i<24;i++){
+      (function(i){
+        setTimeout(function(){
+          var h=document.createElement('div');
+          h.className='heart';
+          h.textContent=['💖','💕','🌸','💗'][i%4];
+          h.style.left=(Math.random()*95)+'vw';
+          document.body.appendChild(h);
+          setTimeout(function(){h.remove()},3600);
+        },i*120);
+      })(i);
+    }
+  });
+})();
+</script>
+</body>
+</html>
